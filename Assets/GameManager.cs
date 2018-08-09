@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public bool startGame;
     public GameObject mainMenu;
     public GameObject Level;
-   // public Text endGamePointsText;
+    // public Text endGamePointsText;
     public Text endGamePointsText2;
     public Text endGameBestPointsText;
     public Text endGameBestPointsText2;
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     public GameObject noCoinsMessage;
     float myTimer;
     public static AudioSource audioMusic;
-    public AudioClip[]musics;
+    public AudioClip[] musics;
     static int restartInt; //Quante volte è stato restartato
     static bool isRestart;
     public GameObject AdButton;
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if(!instance)instance = this;
+        if (!instance) instance = this;
         //PlayerPrefs.DeleteAll();
         Level.SetActive(false);
         startGame = false;
@@ -74,8 +74,8 @@ public class GameManager : MonoBehaviour
         audioMusic.clip = musics[Random.Range(0, musics.Length)];
         Screen.sleepTimeout = (int)0f;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-      //  Screen.SetResolution(640, 480, true);
-        Application.targetFrameRate = 60;
+        //  Screen.SetResolution(640, 480, true);
+        Application.targetFrameRate = 360;
 
     }
 
@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (Random.Range(0, 3) == 0)
-        AdButton.SetActive(false);
+            AdButton.SetActive(false);
 
         foreach (GameObject balls in ballPrefabs)
         {
@@ -155,24 +155,25 @@ public class GameManager : MonoBehaviour
 
 
         if (PlayerPrefs.HasKey(AppName + "HI"))
-            {
+        {
             if (PlayerPrefs.GetInt(AppName + "HI").Equals(1))
             {
                 HQEffect.enabled = true;
                 dirLight.shadows = LightShadows.Hard;
+                dirLight.renderMode = LightRenderMode.ForcePixel;
             }
             else
             {
                 HQEffect.enabled = false;
                 dirLight.shadows = LightShadows.None;
-
+                dirLight.renderMode = LightRenderMode.ForceVertex;
             }
-            }
-            else
-            {
+        }
+        else
+        {
             if (!isRestart)
                 StartCoroutine(RescaleQuality());
-            }
+        }
 
 
 
@@ -197,7 +198,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-   public void ShowVideoForReward() { }
+    public void ShowVideoForReward() { }
 
     IEnumerator RescaleQuality()
     {
@@ -207,20 +208,22 @@ public class GameManager : MonoBehaviour
         {
             HQEffect.enabled = true;
             dirLight.shadows = LightShadows.Hard;
+            dirLight.renderMode = LightRenderMode.ForcePixel;
             PlayerPrefs.SetInt(AppName + "HI", 1);
         }
         else
         {
             HQEffect.enabled = false;
             dirLight.shadows = LightShadows.None;
+            dirLight.renderMode = LightRenderMode.ForceVertex;
             PlayerPrefs.SetInt(AppName + "HI", 0);
         }
     }
 
- 
 
 
-        public void Restart()
+
+    public void Restart()
     {
         fadeOutPanel.SetActive(true);
         isRestart = true;
@@ -228,7 +231,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-    IEnumerator Reload() {
+    IEnumerator Reload()
+    {
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -238,18 +242,18 @@ public class GameManager : MonoBehaviour
         startGame = false;
         endGamePointsText2.text = points.ToString();
         sharePointText.text = points.ToString();
-        endGameBestPointsText.text= PlayerPrefs.GetInt(AppName + "bestPoint").ToString();       
+        endGameBestPointsText.text = PlayerPrefs.GetInt(AppName + "bestPoint").ToString();
         DisableLevel();
     }
 
     void DisableLevel()
     {
-   
+
         Level.SetActive(false);
-       // selectedBall.gameObject.SetActive(false);
-       Destroy(selectedBall);
+        // selectedBall.gameObject.SetActive(false);
+        Destroy(selectedBall);
     }
-     void StartGame()
+    void StartGame()
     {
         ballControl.dead = false;
         startGame = true;
@@ -261,7 +265,8 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void QuitGame() {
+    public void QuitGame()
+    {
         Application.Quit();
     }
 
@@ -276,7 +281,7 @@ public class GameManager : MonoBehaviour
         startGame = false;
         mainMenu.SetActive(true);
         Level.SetActive(false);
-       // selectedBall.gameObject.SetActive(false);
+        // selectedBall.gameObject.SetActive(false);
         mainMenu.SetActive(true);
         deadPanel.SetActive(false);
         isRestart = false;
@@ -290,7 +295,8 @@ public class GameManager : MonoBehaviour
             pausePanel.SetActive(true);
             pauseTimeUI.gameObject.SetActive(false);
         }
-        else {
+        else
+        {
             pauseTimer = 4;
             pauseTimeUI.text = "3";
             startPauseTimer = true;
@@ -303,10 +309,11 @@ public class GameManager : MonoBehaviour
 
     public void OpenCredits()
     {
-       creditsPanel.SetActive(true);
+        creditsPanel.SetActive(true);
     }
 
-    void UpdatePoints() {
+    void UpdatePoints()
+    {
 
 
         if (PlayerPrefs.HasKey(AppName + "totalPoint"))
@@ -315,7 +322,7 @@ public class GameManager : MonoBehaviour
         if (PlayerPrefs.HasKey(AppName + "bestPoint"))
             bestPoint = PlayerPrefs.GetInt(AppName + "bestPoint");
 
-        
+
         endGameBestPointsText2.text = bestPoint.ToString();
 
 
@@ -343,7 +350,7 @@ public class GameManager : MonoBehaviour
         myTimer += Time.deltaTime;
 
         col = Color.Lerp(col, targetCol, Time.deltaTime * 0.15f);
-        colorImage.color= dirLight.color = col;
+        colorImage.color = dirLight.color = col;
 
 
         if (myTimer >= 5)
@@ -397,7 +404,8 @@ public class GameManager : MonoBehaviour
             totalCoinsText3.text = totalPoints.ToString();
             BallSelection(ball);
         }
-        else {
+        else
+        {
             noCoinsMessage.SetActive(true);
         }
     }
@@ -410,11 +418,12 @@ public class GameManager : MonoBehaviour
 
 
 
-    void Update() {
+    void Update()
+    {
         if (ballControl.dead)
             GameManager.audioMusic.volume -= 0.1f * Time.deltaTime;
         else
-        ChangeTargetColor();
+            ChangeTargetColor();
 
         if (startPauseTimer)
         {
@@ -424,7 +433,7 @@ public class GameManager : MonoBehaviour
                 pauseTimeUI.text = Mathf.RoundToInt(pauseTimer).ToString();
 
 
-            if (pauseTimer<=0) //endPause
+            if (pauseTimer <= 0) //endPause
             {
                 Time.timeScale = 1;
                 pausePanel.SetActive(false);
